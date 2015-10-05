@@ -1,8 +1,11 @@
 # Stingray
 
-IDAPython plugin for searching strings recursively in the current function.
-Stingray searches strings from the current position onwards. The results order
-is the natural order of strings in the BFS search tree
+Stingray searches strings from the current position onwards in the 
+current function. The results order is the natural order of strings in the 
+BFS search tree. 
+
+For each found string it displays the xref address, the string address, 
+the string type and the of course the string itself.
 
 ## Requirements
 

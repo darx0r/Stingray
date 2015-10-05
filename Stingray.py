@@ -179,7 +179,7 @@ def find_function_callees( func_ea, maxlvl ):
 	pending = set( (func_ea,) )
 	lvl = 0
 
-	while len(pending) > 0 and lvl < maxlvl:
+	while len(pending) > 0:
 		func_ea = pending.pop()
 		visited.add(func_ea)
 
@@ -190,6 +190,9 @@ def find_function_callees( func_ea, maxlvl ):
 		func_end = FindFuncEnd(func_ea)
 		if func_end == BADADDR: continue
 
+		lvl +=1
+		if lvl >= maxlvl: continue
+		
 		all_refs = set()
 		for line in Heads(func_ea, func_end):
 
@@ -203,7 +206,6 @@ def find_function_callees( func_ea, maxlvl ):
 
 		all_refs -= visited
 		pending |= all_refs
-		lvl +=1
 
 	return callees
 

@@ -23,6 +23,8 @@ class Config( object ):
 
 	PLUGIN_TEST				= False
 	SEARCH_RECURSION_MAXLVL	= 0
+	
+	MENU_CONTEXT 			= None
 
 	# Icon in PNG format
 	PLUGIN_ICON_PNG =	(
@@ -59,6 +61,7 @@ class Config( object ):
 		NO_HOTKEY = ""
 		SETMENU_INS = 0
 		NO_ARGS = tuple()
+
 		menu = idaapi.add_menu_item(	"Options/", 
 										"{} Config".format(Config.PLUGIN_NAME), 
 										NO_HOTKEY, 
@@ -67,8 +70,18 @@ class Config( object ):
 										NO_ARGS )
 		if menu is None:
 			del menu
-
+		
+		Config.MENU_CONTEXT = menu
 		Config.load()
+
+
+	@staticmethod
+	def destory():
+
+		if Config.MENU_CONTEXT:
+			idaapi.del_menu_item(Config.MENU_CONTEXT)
+		
+		Config.save()
 
 
 	@staticmethod
@@ -299,7 +312,7 @@ class StingrayPlugin( idaapi.plugin_t ):
 
 	def term( self ):
 
-		Config.save()
+		Config.destory()
 
 		if self.icon_id != 0:
 			idaapi.free_custom_icon(self.icon_id)

@@ -9,6 +9,45 @@ strings in the BFS search tree.
 For each found string it displays the xref address, the string address, 
 the string type and the of course the string itself.
 
+## Stingray by Example
+
+```C
+#include <stdio.h>
+
+void bar()
+{
+	printf("hello from bar\n");
+}
+
+void foo()
+{
+	wprintf(L"hello from foo\n");
+	bar();
+}
+
+void foo2()
+{
+	wprintf(L"hello from foo2\n");
+	bar();
+}
+
+void main()
+{
+	printf("hello from main\n");
+	foo();
+	foo2();
+
+	getchar();
+}
+```
+
+The cursor is on main disassembled function. We hit Shift+S and we get the 
+following Stingray output:
+
+![Example Output](examples/images/example_0_output.png)
+
+:)
+
 ## Requirements
 
 - IDA (Hex Rays Interactive Disassembler) version >= 6 with IDAPython

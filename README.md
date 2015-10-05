@@ -3,8 +3,8 @@
 Stingray is an IDAPython plugin.
 Its main feature is searching strings from the current position onwards in the 
 current function. 
-It can do it recursively also. The results order is the natural order of 
-strings in the BFS search tree. 
+It can do it recursively also with configurable search depth. 
+The results order is the natural order of strings in the BFS search tree. 
 
 For each found string it displays the xref address, the string address, 
 the string type and the of course the string itself.
@@ -41,11 +41,13 @@ void main()
 }
 ```
 
-The cursor is on main disassembled function. We hit Shift+S and we get the 
-following Stingray output:
+My Stingray was configured to recursive search we depth of 3.
+I put the cursor on main function and hit Shift+S.
+We get the following Stingray output:
 
 ![Example Output](examples/images/example_0_output.png)
 
+Notice the Xrefs are clickable !
 :)
 
 ## Requirements
@@ -54,7 +56,7 @@ following Stingray output:
 
 ## Installation
 
-1. Copy Stingray.py file to the plugins directory of IDA (%IDAPATH%\plugins) and 
+1. Copy src/Stingray.py file to the plugins directory of IDA (%IDAPATH%\plugins) and 
 restart IDA.
 
 2. You are ready to go :)

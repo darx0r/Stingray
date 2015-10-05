@@ -14,11 +14,11 @@ class Config( object ):
                                         "cfg/Stingray.cfg" )
 
     CHOOSER_TITLE           = "Stingray - Function Strings"
-    CHOOSER_COLUMN_NAMES    = [ "Xref",    "Address",    "Type",    "String" ]
-    CHOOSER_COLUMN_SIZES    = [ 18,     8,             5,         80 ]
+    CHOOSER_COLUMN_NAMES    = [ "Xref", "Address",  "Type", "String"    ]
+    CHOOSER_COLUMN_SIZES    = [ 18,     8,          5,      80          ]
     CHOOSER_COLUMNS         = [ list(c) for c in 
                                 zip(CHOOSER_COLUMN_NAMES, CHOOSER_COLUMN_SIZES) ]
-    CHOOSER_ROW             = collections.namedtuple(    "ResultRow", 
+    CHOOSER_ROW             = collections.namedtuple(   "ResultRow", 
                                                         CHOOSER_COLUMN_NAMES )
 
     PLUGIN_TEST                = False

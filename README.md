@@ -1,3 +1,5 @@
+
+![](images/Stingray.png)
 # Stingray
 
 Stingray is an IDAPython plugin.
@@ -56,8 +58,8 @@ Notice the Xrefs are clickable !
 
 ## Installation
 
-1. Copy src/Stingray.py file to the plugins directory of IDA (%IDAPATH%\plugins) and 
-restart IDA.
+1. Copy src/Stingray.py file to the plugins directory of IDA (%IDAPATH%\plugins) 
+and restart IDA.
 
 2. You are ready to go :)
 

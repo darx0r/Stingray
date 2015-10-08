@@ -1,6 +1,6 @@
 
-![](images/Stingray.png)
-# Stingray
+
+# Stingray ![](images/Stingray.png)
 
 Stingray is an IDAPython plugin.
 Its main feature is searching strings from the current position onwards in the 

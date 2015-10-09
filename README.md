@@ -2,9 +2,7 @@
 
 # Stingray ![](images/Stingray.png)
 
-Stingray is an IDAPython plugin.
-Its main feature is searching strings from the current position onwards in the 
-current function. 
+Stingray is an IDAPython plugin for finding function strings. The search is from the current position onwards in the current function.
 It can do it recursively also with configurable search depth. 
 The results order is the natural order of strings in the BFS search tree. 
 

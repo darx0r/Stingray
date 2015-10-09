@@ -4,7 +4,7 @@
 
 Stingray is an IDAPython plugin for finding function strings. The search is from the current position onwards in the current function.
 It can do it recursively also with configurable search depth. 
-The results order is the natural order of strings in the BFS search tree. 
+The results order is the natural order of strings in the BFS search graph. 
 
 For each found string it displays the xref address, the string address, 
 the string type and the of course the string itself.
@@ -64,7 +64,7 @@ and restart IDA.
 ## Usage and Menus
 
 load your favourite binary with IDA. 
-To find strings in the current function from your your position onwards 
+To find strings in the current function from your position onwards 
 hit **Shift+s**.
 
 Stingray can also be found in Edit/Plguins/Stingray menu.

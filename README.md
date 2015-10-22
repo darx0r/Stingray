@@ -78,3 +78,5 @@ You can configure Stingray anytime from Options\Stingray Config menu.
 
 You can configure the search depth. For non-recursive search mode
 choose 0 depth.
+
+By default, Stingray is in non-recursive mode.

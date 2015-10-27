@@ -1,5 +1,6 @@
 import collections
 import idautils
+import logging
 import idaapi
 import idc
 import os
@@ -252,6 +253,7 @@ class PluginChooser( idaapi.Choose2 ):
 
     def SetItems( self, items ):
         self.items = [] if items is None else items
+        self.Refresh()
 
 
     def OnClose( self ):
@@ -284,6 +286,10 @@ class StingrayPlugin( idaapi.plugin_t ):
     wanted_name     = Config.PLUGIN_NAME
     wanted_hotkey   = Config.PLUGIN_HOTKEY
 
+    def __init__(self, *args, **kwargs):
+        super(StingrayPlugin, self).__init__(*args, **kwargs)
+        self._chooser = None
+
 
     def init( self ):
 
@@ -303,12 +309,16 @@ class StingrayPlugin( idaapi.plugin_t ):
 
         try:
             rows = self.finder.get_current_function_strings()
-            PluginChooser(  Config.CHOOSER_TITLE, 
-                            Config.CHOOSER_COLUMNS, 
-                            rows, 
-                            self.icon_id    ).Show()
-        except:
-            pass
+            if self._chooser is None:
+                self._chooser = PluginChooser(  Config.CHOOSER_TITLE, 
+                                                Config.CHOOSER_COLUMNS, 
+                                                rows, 
+                                                self.icon_id    )
+            else:
+                self._chooser.SetItems(rows)
+            self._chooser.Show()
+        except Exception as e:
+            logging.getLogger("Stingray").warning("exception", exc_info=True)
         return
 
 

@@ -1,5 +1,6 @@
 import collections
 import idautils
+import logging
 import idaapi
 import idc
 import os
@@ -81,7 +82,10 @@ class Config( object ):
         if Config.MENU_CONTEXT:
             idaapi.del_menu_item(Config.MENU_CONTEXT)
         
-        Config.save()
+        try:
+            Config.save()
+        except IOError:
+            logging.getLogger("Stingray").warning("Failed to write config file")
 
 
     @staticmethod

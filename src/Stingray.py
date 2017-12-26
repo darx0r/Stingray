@@ -5,7 +5,7 @@ import idaapi
 import idc
 import os
 
-class Config( object ):
+class Config( idaapi.action_handler_t ):
 
     PLUGIN_NAME         = "Stingray"
     PLUGIN_COMMENT      = "find strings in current function recursively"
@@ -25,7 +25,7 @@ class Config( object ):
     PLUGIN_TEST                = False
     SEARCH_RECURSION_MAXLVL    = 0
     
-    MENU_CONTEXT = None
+    ACTION_NAME = "Stringray:ConfigAction"
 
     # Icon in PNG format
     PLUGIN_ICON_PNG =    (
@@ -63,24 +63,15 @@ class Config( object ):
         SETMENU_INS = 0
         NO_ARGS = tuple()
 
-        menu = idaapi.add_menu_item(    "Options/", 
-                                        "{} Config".format(Config.PLUGIN_NAME), 
-                                        NO_HOTKEY, 
-                                        SETMENU_INS, 
-                                        Config.stingray_config, 
-                                        NO_ARGS )
-        if menu is None:
-            del menu
-        
-        Config.MENU_CONTEXT = menu
+        idaapi.register_action(idaapi.action_desc_t(Config.ACTION_NAME, "Singray config", Config()))
+        idaapi.attach_action_to_menu("Options/", Config.ACTION_NAME, idaapi.SETMENU_APP)
         Config.load()
 
 
     @staticmethod
     def destory():
 
-        if Config.MENU_CONTEXT:
-            idaapi.del_menu_item(Config.MENU_CONTEXT)
+        idaapi.unregister_action(Config.ACTION_NAME)
         
         try:
             Config.save()
@@ -115,6 +106,11 @@ class Config( object ):
         if input >= 0:
             Config.SEARCH_RECURSION_MAXLVL = input
 
+    def activate(self, ctx):
+        self.stingray_config()
+
+    def update(self, ctx):
+        return idaapi.AST_ENABLE_ALWAYS
 
 # ------------------------------------------------------------------------------
 

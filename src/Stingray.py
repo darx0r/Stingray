@@ -63,7 +63,7 @@ class Config( idaapi.action_handler_t ):
         SETMENU_INS = 0
         NO_ARGS = tuple()
 
-        idaapi.register_action(idaapi.action_desc_t(Config.ACTION_NAME, "Singray config", Config()))
+        idaapi.register_action(idaapi.action_desc_t(Config.ACTION_NAME, "{} Config".format(Config.PLUGIN_NAME), Config()))
         idaapi.attach_action_to_menu("Options/", Config.ACTION_NAME, idaapi.SETMENU_APP)
         Config.load()
 

@@ -5,6 +5,7 @@ import idaapi
 import idc
 import os
 
+from . import Config
 class Config( idaapi.action_handler_t ):
 
     PLUGIN_NAME         = "Stingray"

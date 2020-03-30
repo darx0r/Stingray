@@ -2,8 +2,21 @@ import collections
 import idautils
 import logging
 import idaapi
+import ida_bytes
 import idc
 import os
+
+
+if idaapi.IDA_SDK_VERSION > 700:
+   # based on based on https://www.hex-rays.com/products/ida/support/ida74_idapython_no_bc695_porting_guide.shtml
+    get_flags = ida_bytes.get_full_flags
+else:
+    get_flags = idc.GetFlags
+
+
+logging.basicConfig()
+logger = logging.getLogger("Stringray")
+
 
 class ConfigStingray( idaapi.action_handler_t ):
 
@@ -76,7 +89,7 @@ class ConfigStingray( idaapi.action_handler_t ):
         try:
             ConfigStingray.save()
         except IOError:
-            logging.getLogger("Stingray").warning("Failed to write config file")
+            logger.warning("Failed to write config file")
 
 
     @staticmethod
@@ -147,7 +160,7 @@ class String( object ):
 
     def get_row( self ):
 
-        xref = "{}:{:08X}".format(GetFunctionName(self.xref), self.xref)
+        xref = "{}:{:08X}".format(idc.GetFunctionName(self.xref), self.xref)
         addr = "{:08X}".format(self.addr)
         type = String.ASCSTR[self.type]
         string = self.string
@@ -183,23 +196,23 @@ def find_function_callees( func_ea, maxlvl ):
         func_ea = pending.pop()
         visited.add(func_ea)
 
-        func_name = GetFunctionName(func_ea)
+        func_name = idc.GetFunctionName(func_ea)
         if not func_name: continue
         callees.append(func_ea)
 
-        func_end = FindFuncEnd(func_ea)
-        if func_end == BADADDR: continue
+        func_end = idc.FindFuncEnd(func_ea)
+        if func_end == idaapi.BADADDR: continue
 
         lvl +=1
         if lvl >= maxlvl: continue
-        
-        all_refs = set()
-        for line in Heads(func_ea, func_end):
 
-            if not isCode( GetFlags(line) ): continue
+        all_refs = set()
+        for line in idautils.Heads(func_ea, func_end):
+
+            if not ida_bytes.isCode(get_flags(line)): continue
 
             ALL_XREFS = 0
-            refs = CodeRefsFrom(line, ALL_XREFS)
+            refs = idautils.CodeRefsFrom(line, ALL_XREFS)
             refs = set( filter( lambda x: not (x >= func_ea and x <= func_end), 
                                 refs) )
             all_refs |= refs
@@ -317,7 +330,7 @@ class StingrayPlugin( idaapi.plugin_t ):
                 self._chooser.SetItems(rows)
             self._chooser.Show()
         except Exception as e:
-            logging.getLogger("Stingray").warning("exception", exc_info=True)
+            logger.warning("exception", exc_info=True)
         return
 
 
@@ -345,4 +358,3 @@ if ConfigStingray.PLUGIN_TEST:
     p.init()
     p.run()
     p.term()
-

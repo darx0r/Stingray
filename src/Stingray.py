@@ -8,6 +8,7 @@ import os
 
 
 if idaapi.IDA_SDK_VERSION > 700:
+   # based on based on https://www.hex-rays.com/products/ida/support/ida74_idapython_no_bc695_porting_guide.shtml
     get_flags = ida_bytes.get_full_flags
 else:
     get_flags = idc.GetFlags
@@ -357,4 +358,3 @@ if Config.PLUGIN_TEST:
     p.init()
     p.run()
     p.term()
-

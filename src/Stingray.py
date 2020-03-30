@@ -18,7 +18,7 @@ logging.basicConfig()
 logger = logging.getLogger("Stringray")
 
 
-class Config( idaapi.action_handler_t ):
+class ConfigStingray( idaapi.action_handler_t ):
 
     PLUGIN_NAME         = "Stingray"
     PLUGIN_COMMENT      = "find strings in current function recursively"
@@ -38,7 +38,7 @@ class Config( idaapi.action_handler_t ):
     PLUGIN_TEST                = False
     SEARCH_RECURSION_MAXLVL    = 0
     
-    ACTION_NAME = "Stringray:ConfigAction"
+    ACTION_NAME = "Stringray:ConfigStingrayAction"
 
     # Icon in PNG format
     PLUGIN_ICON_PNG =    (
@@ -76,18 +76,18 @@ class Config( idaapi.action_handler_t ):
         SETMENU_INS = 0
         NO_ARGS = tuple()
 
-        idaapi.register_action(idaapi.action_desc_t(Config.ACTION_NAME, "{} Config".format(Config.PLUGIN_NAME), Config()))
-        idaapi.attach_action_to_menu("Options/", Config.ACTION_NAME, idaapi.SETMENU_APP)
-        Config.load()
+        idaapi.register_action(idaapi.action_desc_t(ConfigStingray.ACTION_NAME, "{} ConfigStingray".format(ConfigStingray.PLUGIN_NAME), ConfigStingray()))
+        idaapi.attach_action_to_menu("Options/", ConfigStingray.ACTION_NAME, idaapi.SETMENU_APP)
+        ConfigStingray.load()
 
 
     @staticmethod
     def destory():
 
-        idaapi.unregister_action(Config.ACTION_NAME)
+        idaapi.unregister_action(ConfigStingray.ACTION_NAME)
         
         try:
-            Config.save()
+            ConfigStingray.save()
         except IOError:
             logger.warning("Failed to write config file")
 
@@ -96,8 +96,8 @@ class Config( idaapi.action_handler_t ):
     def load():
 
         try:
-            maxlvl = int( open(Config.CONFIG_FILE_PATH,"rb").read() )
-            Config.SEARCH_RECURSION_MAXLVL = maxlvl
+            maxlvl = int( open(ConfigStingray.CONFIG_FILE_PATH,"rb").read() )
+            ConfigStingray.SEARCH_RECURSION_MAXLVL = maxlvl
         except:
             pass
 
@@ -105,19 +105,19 @@ class Config( idaapi.action_handler_t ):
     @staticmethod
     def save():
 
-        config_data = str(Config.SEARCH_RECURSION_MAXLVL)
-        open(Config.CONFIG_FILE_PATH,"wb").write(config_data)
+        config_data = str(ConfigStingray.SEARCH_RECURSION_MAXLVL)
+        open(ConfigStingray.CONFIG_FILE_PATH,"wb").write(config_data)
 
 
     @staticmethod
     def stingray_config():
 
-        input = idc.AskLong(    Config.SEARCH_RECURSION_MAXLVL, 
+        input = idc.AskLong(    ConfigStingray.SEARCH_RECURSION_MAXLVL, 
                                 "Please enter string search max. depth:"
                                 "\n( 0 - non-recursive mode )"            )
 
         if input >= 0:
-            Config.SEARCH_RECURSION_MAXLVL = input
+            ConfigStingray.SEARCH_RECURSION_MAXLVL = input
 
     def activate(self, ctx):
         self.stingray_config()
@@ -165,7 +165,7 @@ class String( object ):
         type = String.ASCSTR[self.type]
         string = self.string
         # IDA Chooser doesn't like tuples ... row should be a list
-        return list( Config.CHOOSER_ROW(xref, addr, type, string) )
+        return list( ConfigStingray.CHOOSER_ROW(xref, addr, type, string) )
 
 
 def find_function_strings( func_ea ):
@@ -235,9 +235,9 @@ class StringFinder( object ):
         curr_func = idc.GetFunctionName(addr_in_func)
 
         funcs = [ addr_in_func ]
-        if Config.SEARCH_RECURSION_MAXLVL > 0:
+        if ConfigStingray.SEARCH_RECURSION_MAXLVL > 0:
             funcs = find_function_callees(  addr_in_func, 
-                                            Config.SEARCH_RECURSION_MAXLVL  )
+                                            ConfigStingray.SEARCH_RECURSION_MAXLVL  )
 
         total_strs = []
         for func in funcs:
@@ -282,7 +282,7 @@ class PluginChooser( idaapi.Choose2 ):
 
     def OnSelectLine( self, n ):
 
-        row = Config.CHOOSER_ROW( *self.items[n] )
+        row = ConfigStingray.CHOOSER_ROW( *self.items[n] )
         xref = row.Xref.split(':')[-1]
         idc.Jump( int(xref, 16) )
 
@@ -293,10 +293,10 @@ class PluginChooser( idaapi.Choose2 ):
 class StingrayPlugin( idaapi.plugin_t ):
 
     flags           = 0
-    comment         = Config.PLUGIN_COMMENT
-    help            = Config.PLUGIN_HELP
-    wanted_name     = Config.PLUGIN_NAME
-    wanted_hotkey   = Config.PLUGIN_HOTKEY
+    comment         = ConfigStingray.PLUGIN_COMMENT
+    help            = ConfigStingray.PLUGIN_HELP
+    wanted_name     = ConfigStingray.PLUGIN_NAME
+    wanted_hotkey   = ConfigStingray.PLUGIN_HOTKEY
 
     def __init__(self, *args, **kwargs):
         super(StingrayPlugin, self).__init__(*args, **kwargs)
@@ -305,14 +305,14 @@ class StingrayPlugin( idaapi.plugin_t ):
 
     def init( self ):
 
-        self.icon_id = idaapi.load_custom_icon( data = Config.PLUGIN_ICON_PNG, 
+        self.icon_id = idaapi.load_custom_icon( data = ConfigStingray.PLUGIN_ICON_PNG, 
                                                 format = "png"    )
         if self.icon_id == 0:
             raise RuntimeError("Failed to load icon data!")
 
         self.finder = StringFinder()
 
-        Config.init()
+        ConfigStingray.init()
 
         return idaapi.PLUGIN_KEEP
 
@@ -322,8 +322,8 @@ class StingrayPlugin( idaapi.plugin_t ):
         try:
             rows = self.finder.get_current_function_strings()
             if self._chooser is None:
-                self._chooser = PluginChooser(  Config.CHOOSER_TITLE, 
-                                                Config.CHOOSER_COLUMNS, 
+                self._chooser = PluginChooser(  ConfigStingray.CHOOSER_TITLE, 
+                                                ConfigStingray.CHOOSER_COLUMNS, 
                                                 rows, 
                                                 self.icon_id    )
             else:
@@ -336,7 +336,7 @@ class StingrayPlugin( idaapi.plugin_t ):
 
     def term( self ):
 
-        Config.destory()
+        ConfigStingray.destory()
 
         if self.icon_id != 0:
             idaapi.free_custom_icon(self.icon_id)
@@ -352,8 +352,8 @@ def PLUGIN_ENTRY():
 # ------------------------------------------------------------------------------
 
 
-if Config.PLUGIN_TEST:
-    print "{} - test".format(Config.PLUGIN_NAME)
+if ConfigStingray.PLUGIN_TEST:
+    print "{} - test".format(ConfigStingray.PLUGIN_NAME)
     p = StingrayPlugin()
     p.init()
     p.run()

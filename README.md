@@ -54,7 +54,9 @@ Notice the Xrefs are clickable !
 
 - IDA (Hex Rays Interactive Disassembler) version >= 6 with IDAPython
 - tested on IDA 6.1.1, 7.0, **7.2**
-(Tell us about your experience on higher versions!)
+- IDA 7.4 support was added in branch **7.4** (kudos to @0xricksanchez)
+
+Tell us about your experience on higher versions!
 
 ## Installation
 

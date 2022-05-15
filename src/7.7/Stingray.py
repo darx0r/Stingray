@@ -268,8 +268,7 @@ class PluginChooser( idaapi.Choose ):
 
     def SetItems( self, items ):
         self.items = [] if items is None else items
-        self.refresh_idaview_anyway()
-
+        ida_kernwin.refresh_idaview_anyway()
 
     def OnClose( self ):
         pass

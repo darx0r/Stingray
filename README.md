@@ -1,6 +1,6 @@
 
 
-# Stingray ![](images/Stingray.png)
+# Stingray (fork w/support for IDA7.7) ![](images/Stingray.png)
 
 Stingray is an IDAPython plugin for finding function strings. The search is from the current position onwards in the current function.
 It can do it recursively also with configurable search depth. 
